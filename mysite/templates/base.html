@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block shrift %}{% endblock shrift %}
+    {% block css %}{% endblock css %}
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <header>
+        <section>
+            <a href=""><img src="{% static "img/logo-art.png" %}" alt=""></a>
+        </section>
+        <section class="head-search">
+            <ul>
+                <a href="" class="link">Наши новости</a>
+                <a href="" class="link midle-ref">Комсостав</a>
+                <a href="" class="link">Школа вожатых</a>
+                <a href="registrarion/registration.html" class="link last-link">Войти</a>
+            </ul>
+        </section>
+    </header>
