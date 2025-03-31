@@ -1,31 +1,27 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
-    <title>Студенческий педагогический отряд</title>
-</head>
-<body>
-    <header>
-        <section>
-            <a href=""><img src="image/logo-art.png" alt=""></a>
-        </section>
-        <section class="head-search">
-            <ul>
-                <a href="" class="link">Наши новости</a>
-                <a href="" class="link midle-ref">Комсостав</a>
-                <a href="" class="link">Школа вожатых</a>
-                <a href="registrarion/registration.html" class="link last-link">Войти</a>
-            </ul>
-        </section>
-    </header>
+    <style>
+        .main{
+            background: url({% static "img/main-foto.png" %}) no-repeat center center/cover;
+        }
+    </style>
+    {% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+{% endblock css %}
+
+{% block title %}Студенческий педагогический отряд{% endblock title %}
+
+{% block content %}
     <section class="main">
         <div class="overlay"></div>
         <div class="content">
@@ -37,11 +33,11 @@
                 У каждого атмосфера своя, у нас она огненная!
             </p>
         </div>
-        <img src="image/foto1.png" class="photo photo1">
-        <img src="image/foto2.png" class="photo photo4">
-        <img src="image/foto3.png" class="photo photo3">
+        <img src="{% static "img/foto1.png" %}" class="photo photo1">
+        <img src="{% static "img/foto2.png" %}" class="photo photo4">
+        <img src="{% static "img/foto3.png" %}" class="photo photo3">
         <!-- <img src="image/foto4.png" class="photo photo2"> -->
-        <img src="image/foto5.png" class="photo photo5">
+        <img src="{% static "img/foto5.png" %}" class="photo photo5">
     </section>
-</body>
-</html>
+{% endblock content %}
+

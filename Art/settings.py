@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'Art.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangodb',  # Проверили через SHOW DATABASES;
-        'USER': 'django_user',  # Проверили через SELECT User FROM mysql.user;
-        'PASSWORD': 'P@ssw0rd',  # Обновили при необходимости
-        'HOST': 'localhost',  # Проверили через SHOW VARIABLES LIKE 'hostname';
-        'PORT': '3306',  # Проверили через SHOW VARIABLES LIKE 'port';
+        'NAME': 'djangodb', 
+        'USER': 'django_user',  
+        'PASSWORD': 'P@ssw0rd',  
+        'HOST': 'localhost', 
+        'PORT': '3306',  
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
@@ -132,7 +132,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    BASE_DIR / 'static',
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
