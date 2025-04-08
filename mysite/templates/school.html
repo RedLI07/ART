@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-sv.png" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/school.css" %}">
+{% endblock css %}
+
+{% block content %}
+    <section class="main">
+        <article class="text">
+            <div>
+                <h1>Школа вожатых</h1>
+                <p>перед тем как отправиться на свою первую целину кандидаты проходят обучение в школе вожатых. 
+                    Обучение - это набор лекций от профессоналов своего дела. Так же обучающиеся выезжают на 
+                    "Инструктивный сбор", где используют весь изученый материал на практике 
+                </p>
+            </div>
+        </article>
+
+        <article class="mini-foto">
+
+        </article>
+    </section>
+{% endblock content %}
