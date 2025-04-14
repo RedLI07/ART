@@ -152,3 +152,8 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'index'
+
+AUTHENTICATION_BACKENDS = [
+    'mysite.backends.ApprovedUserBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

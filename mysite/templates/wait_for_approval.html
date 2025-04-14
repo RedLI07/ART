@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/wait.css" %}">
+{% endblock css %}
+
+{% block content %}
+<section class="overlay">
+    <section class="content">
+        <h2>Успешно!</h2>
+        <section class="succes">
+            <p>Заявка на регистрацию отправлена!</p>
+            <p>Ожидайте одобрение администратора!</p>
+            <a href="{% url "index" %}" class='main'>Перейти на главную страницу</a>
+        </section>
+    </section>
+</section>
+{% endblock content %}

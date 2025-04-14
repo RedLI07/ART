@@ -3,21 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
 class RegisterForm(UserCreationForm):
-    password1 = forms.CharField(
-        label="Пароль",
-        widget=forms.PasswordInput,
-        help_text="Пароль должен содержать минимум 8 символов."
-    )
-    password2 = forms.CharField(
-        label="Подтверждение пароля",
-        widget=forms.PasswordInput
-    )
-
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
-        labels = {
-            'email': 'Email',
-            'first_name': 'Имя',
-            'last_name': 'Фамилия'
-        }
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_approved = False  # Явно запрещаем доступ
+        if commit:
+            user.save()
+        return user

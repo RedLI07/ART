@@ -6,8 +6,9 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('school/', views.school, name='school'),
-    path('register/', views.register, name='register'),
+    path('register/', views.register_view, name='register'),
     path('profile/', views.profile, name='profile'),
+    path('wait_for_approval/', views.wait_for_approval, name='wait_for_approval'),
     
     # Простые URL для входа/выхода
     path('login/', auth_views.LoginView.as_view(

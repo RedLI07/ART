@@ -1,42 +1,61 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Регистрация</h2>
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        {{ form.email.errors }}
-    </div>
-    <div class="form-group">
-        {{ form.first_name.label_tag }}
-        {{ form.first_name }}
-        {{ form.first_name.errors }}
-    </div>
-    <div class="form-group">
-        {{ form.last_name.label_tag }}
-        {{ form.last_name }}
-        {{ form.last_name.errors }}
-    </div>
-    <div class="form-group">
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-        {{ form.password1.errors }}
-    </div>
-    <div class="form-group">
-        {{ form.password2.label_tag }}
-        {{ form.password2 }}
-        {{ form.password2.errors }}
-    </div>
-    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-</form>
-<p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
 
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/registr.css" %}">
+{% endblock css %}
+{% block title %}Регистрация{% endblock title %}
+
+{% block content %}
+<section class="overlay">
+    <section class="content">
+        <h2>Регистрация</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <p>Логин:</p>
+                {{ form.username }}
+                {{ form.username.errors }}
+                <small class="form-text text-muted">Обязательное поле. Не более 150 символов.</small>
+            </div>
+            <div class="form-group">
+                <p>Имя:</p>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </div>
+            <div class="form-group">
+                <p>Фамилия:</p>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </div>
+            <div class="form-group">
+                <p>Пароль:</p>
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+                <small class="form-text text-muted">Пароль должен содержать минимум 8 символов.</small>
+            </div>
+            <div class="form-group">
+                <p>Подтверждение пароля:</p>
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+            
+            <div class="btn">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </div>
+        </form>
+        <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+    </section>
+</section>
+{% endblock content %}

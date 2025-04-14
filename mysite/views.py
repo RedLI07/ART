@@ -11,15 +11,12 @@ def index(request):
 def school(request):
     return render(request, 'school.html')
 
-def register(request):
+def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_approved = False
-            user.save()
-            messages.success(request, 'Регистрация успешна! Ожидайте одобрения администратора.')
-            return redirect('home')
+            form.save()  # Аккаунт создается с is_approved=False
+            return redirect('wait_for_approval')  # Перенаправляем на страницу ожидания
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -28,7 +25,7 @@ def register(request):
 def profile(request):
     if not request.user.is_approved:
         messages.warning(request, 'Ваш аккаунт ожидает одобрения администратора.')
-        return redirect('home')
+        return redirect('index')
     return render(request, 'profile.html', {'user': request.user})
 
 # Админ-панель для одобрения
@@ -47,3 +44,7 @@ def approve_users(request):
     
     unapproved = CustomUser.objects.filter(is_approved=False)
     return render(request, 'admin/approve_users.html', {'users': unapproved})
+
+
+def wait_for_approval(request):
+    return render(request, 'wait_for_approval.html')

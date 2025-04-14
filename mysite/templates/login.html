@@ -1,18 +1,42 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/registr.css" %}">
+{% endblock css %}
+{% block title %}Авторизация{% endblock title %}
 
 {% block content %}
-<h2>Вход в систему</h2>
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="id_email">Email:</label>
-        <input type="email" name="username" id="id_email" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label for="id_password">Пароль:</label>
-        <input type="password" name="password" id="id_password" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Войти</button>
-</form>
-<p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-{% endblock %}
+<section class="overlay">
+    <section class="content">
+        <h2>Вход в систему</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Логин:</label>
+                <input type="text" name="username" id="id_username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Пароль:</label>
+                <input type="password" name="password" id="id_password" class="form-control" required>
+            </div>
+
+            <div class="btn">
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </div>
+        </form>
+        <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+    </section>
+</section>
+{% endblock content %}
