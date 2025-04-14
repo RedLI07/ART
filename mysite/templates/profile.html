@@ -1,9 +1,54 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>Профиль пользователя</h2>
-<p><strong>Имя:</strong> {{ user.first_name }}</p>
-<p><strong>Фамилия:</strong> {{ user.last_name }}</p>
-<p><strong>Email:</strong> {{ user.email }}</p>
-<p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            {% if avatar %}
+                <img src="{{ avatar.image.url }}" class="img-thumbnail mb-3" alt="Аватар">
+            {% endif %}
+            
+            <h3>{{ user.username }}</h3>
+            <p><strong>В отряде с:</strong> {{ user.join_year }} года</p>
+            <p><strong>Статус:</strong> {{ user.get_bricks_display }}</p>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">О себе</div>
+                <div class="card-body">
+                    {{ user.about|linebreaks }}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">Достижения</div>
+                <div class="card-body">
+                    <ul>
+                        {% for item in user.achievements.strip.splitlines %}
+                            {% if item.strip %}
+                                <li>{{ item.strip }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            {% if photos %}
+                <div class="card">
+                    <div class="card-header">Фотографии</div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for photo in photos %}
+                                <div class="col-md-4 mb-3">
+                                    <img src="{{ photo.image.url }}" class="img-fluid rounded" alt="Фото">
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

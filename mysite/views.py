@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .forms import RegisterForm
-from .models import CustomUser
+from .forms import *
+from .models import *
 
 def index(request):
     return render(request, 'index.html')
@@ -11,22 +11,66 @@ def index(request):
 def school(request):
     return render(request, 'school.html')
 
-def register_view(request):
+def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()  # Аккаунт создается с is_approved=False
-            return redirect('wait_for_approval')  # Перенаправляем на страницу ожидания
+            user = form.save(commit=False)
+            user.is_approved = False  # Требуется одобрение админа
+            user.save()
+            return redirect('wait_for_approval')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
 @login_required
+def complete_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, instance=request.user)
+        avatar_form = AvatarForm(request.POST, request.FILES)
+        photos_form = MultiplePhotosForm(request.POST, request.FILES)
+
+        if profile_form.is_valid():
+            profile_form.save()
+
+            if avatar_form.is_valid() and 'image' in request.FILES:
+                UserPhoto.objects.filter(user=request.user, is_avatar=True).delete()
+                avatar = avatar_form.save(commit=False)
+                avatar.user = request.user
+                avatar.is_avatar = True
+                avatar.save()
+
+            if photos_form.is_valid() and 'photos' in request.FILES:
+                for file in request.FILES.getlist('photos'):
+                    UserPhoto.objects.create(user=request.user, image=file)
+
+            return redirect('profile')
+
+    else:
+        profile_form = ProfileForm(instance=request.user)
+        avatar_form = AvatarForm()
+        photos_form = MultiplePhotosForm()
+
+    return render(request, 'complete_profile.html', {
+        'profile_form': profile_form,
+        'avatar_form': avatar_form,
+        'photos_form': photos_form
+    })
+
+@login_required
 def profile(request):
-    if not request.user.is_approved:
-        messages.warning(request, 'Ваш аккаунт ожидает одобрения администратора.')
-        return redirect('index')
-    return render(request, 'profile.html', {'user': request.user})
+    user = request.user
+    if not user.is_profile_complete():
+        return redirect('complete_profile')
+    
+    avatar = user.photos.filter(is_avatar=True).first()
+    photos = user.photos.filter(is_avatar=False)
+    
+    return render(request, 'profile.html', {
+        'user': user,
+        'avatar': avatar,
+        'photos': photos
+    })
 
 # Админ-панель для одобрения
 @user_passes_test(lambda u: u.is_superuser)

@@ -1,19 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.core.mail import send_mail
-from django.conf import settings
+from django.core.validators import MinValueValidator
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, password=None, first_name='', last_name='', **extra_fields):
+    def create_user(self, username, password=None, **extra_fields):
         if not username:
             raise ValueError("Пользователь должен иметь username")
-        
-        user = self.model(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            **extra_fields
-        )
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -21,48 +14,45 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, username, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_approved', True)  # Суперпользователь одобрен автоматически
-
-        return self.create_user(username, password=password, **extra_fields)
+        extra_fields.setdefault('is_approved', True)
+        return self.create_user(username, password, **extra_fields)
 
 class CustomUser(AbstractUser):
-    # Основные поля
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        verbose_name="Логин",
-        help_text="Обязательное поле. Не более 150 символов."
+    username = models.CharField(max_length=150, unique=True, verbose_name="Логин")
+    join_year = models.PositiveIntegerField(
+        verbose_name="Год вступления",
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(2000)]
     )
-    first_name = models.CharField(
-        max_length=30,
-        verbose_name="Имя",
-        blank=True
+    bricks_count = models.PositiveIntegerField(
+        verbose_name="Количество кирпичей",
+        default=0
     )
-    last_name = models.CharField(
-        max_length=30,
-        verbose_name="Фамилия",
-        blank=True
-    )
-    
-    # Статус одобрения
-    is_approved = models.BooleanField(
-        default=False,
-        verbose_name="Аккаунт одобрен",
-        help_text="Разрешить пользователю вход в систему."
-    )
+    about = models.TextField(verbose_name="О себе", blank=True, null=True)
+    achievements = models.TextField(verbose_name="Достижения", blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
 
-    # Настройки аутентификации
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []  # Поля не требуются при createsuperuser
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        permissions = [
-            ("can_approve_user", "Может одобрять пользователей"),
-        ]
+    def is_profile_complete(self):
+        return all([
+            self.join_year is not None,
+            self.about not in [None, ''],
+            self.achievements not in [None, '']
+        ])
 
-    def __str__(self):
-        return self.username
+    def get_bricks_display(self):
+        return "Кандидат" if self.bricks_count == 0 else f"{self.bricks_count} кирпича"
+
+class UserPhoto(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='user_photos/')
+    is_avatar = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_avatar', '-created_at']
