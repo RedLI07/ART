@@ -69,7 +69,7 @@ body{
             padding-inline: 15px;
             padding-block: 5px;
             border-radius: 7px;
-            background-color: #e9cbcb;
+            background: linear-gradient(135deg, #e4bd82 0%, #e7cd75 100%);
             border: none;
             font-size: 16px;
             margin-bottom: 10px;
@@ -86,3 +86,4 @@ a {
   color: #fd7b7b;
   
 }
+

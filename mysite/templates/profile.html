@@ -1,54 +1,86 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/profile.css" %}">
+{% endblock css %}
+{% block title %}{{ user.username }}{% endblock title %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            {% if avatar %}
-                <img src="{{ avatar.image.url }}" class="img-thumbnail mb-3" alt="Аватар">
-            {% endif %}
-            
-            <h3>{{ user.username }}</h3>
-            <p><strong>В отряде с:</strong> {{ user.join_year }} года</p>
-            <p><strong>Статус:</strong> {{ user.get_bricks_display }}</p>
-        </div>
-        
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">О себе</div>
-                <div class="card-body">
-                    {{ user.about|linebreaks }}
+<section class="main">
+    <div class="container">
+        <div class="profile-card">
+            <div style="display: grid; align-items: start; grid-template-columns: 1fr 1fr;">
+         
+                <div class="avatar-container">
+                    {% if avatar %}
+                        <img src="{{ avatar.image.url }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Аватар">
+                    {% endif %}
+                    <a href="" class="changed-profile"><p>niefnv</p></a>
                 </div>
-            </div>
-            
-            <div class="card mb-4">
-                <div class="card-header">Достижения</div>
-                <div class="card-body">
-                    <ul>
-                        {% for item in user.achievements.strip.splitlines %}
-                            {% if item.strip %}
-                                <li>{{ item.strip }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            
-            {% if photos %}
-                <div class="card">
-                    <div class="card-header">Фотографии</div>
-                    <div class="card-body">
-                        <div class="row">
-                            {% for photo in photos %}
-                                <div class="col-md-4 mb-3">
-                                    <img src="{{ photo.image.url }}" class="img-fluid rounded" alt="Фото">
-                                </div>
-                            {% endfor %}
-                        </div>
+                
+           
+                <div class="card-boy">
+                    <h2 class="fighter-title">Карточка бойца</h2>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Имя:</span> 
+                        {{ user.first_name}}
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Фамилия:</span>
+                        {{ user.last_name}}
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Год вступления:</span>
+                        {{ user.join_year}}
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Кирпичи:</span>
+                        <span style="background: #0d6efd; color: white; padding: 2px 8px; border-radius: 10px;">{{ user.get_bricks_display }}</span>
                     </div>
                 </div>
-            {% endif %}
+            </div>
+            
+            <!-- Блок "Немного обо мне" -->
+            <h3 class="section-title">Немного обо мне</h3>
+            <div class="about-text">
+                {% if user.about %}
+                    {{ user.about}}
+                {% else %}
+                    <p style="color: #6c757d;">Информация не добавлена</p>
+                {% endif %}
+            </div>
+            
+            <!-- Блок "Достижения" -->
+            <h3 class="section-title">Мои достижения</h3>
+            <ul class="achievements-list">
+                {% if user.achievements %}
+                    {% for item in user.achievements.strip.splitlines %}
+                        {% if item.strip %}
+                            <li>{{ item.strip }}</li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <li style="color: #6c757d;">Достижения не указаны</li>
+                {% endif %}
+            </ul>
         </div>
     </div>
-</div>
+</section>
+
 {% endblock %}

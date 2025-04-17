@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator
+from PIL import Image
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+import os
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -56,3 +61,38 @@ class UserPhoto(models.Model):
 
     class Meta:
         ordering = ['-is_avatar', '-created_at']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        if self.image:
+            img_path = os.path.join(settings.MEDIA_ROOT, self.image.name)
+            with Image.open(img_path) as img:
+                if img.height > 800 or img.width > 800:
+                    output_size = (800, 800)
+                    img.thumbnail(output_size)
+                    img.save(img_path)
+                    
+                # Создание миниатюры
+                thumbnail_size = (200, 200)
+                img.thumbnail(thumbnail_size)
+                thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'thumbnails', self.image.name)
+                os.makedirs(os.path.dirname(thumbnail_path), exist_ok=True)
+                img.save(thumbnail_path)
+
+
+class NewsPost(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    content = models.TextField(verbose_name="Содержание")
+    image = models.ImageField(upload_to='news_images/', verbose_name="Изображение")
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name="Автор")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
+    is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
+
+    class Meta:
+        verbose_name = "Новость"
+        verbose_name_plural = "Новости"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
