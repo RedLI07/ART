@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: #f5ddcf;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/news.css" %}">
+{% endblock css %}
+{% block title %}Новости{% endblock title %}
+
+{% block content %}
+<div class="main">
+    <div class="container">
+        {% if user.is_staff %}
+            <div class="add-news">
+                <a href="{% url 'add_news' %}" class="btn btn-primary">
+                    Добавить новость
+                </a>
+            </div>
+        {% endif %}
+
+     
+        {% for post in news %}
+            <div class="post">
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                
+                </div>
+                <div class="card h-100">
+                    <div class="photo">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    </div>
+                    <div class="card-footer text-muted">
+                        <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                        <a href="{% url 'news_detail' post.pk %}" class="btn btn-primary">
+                        Читать далее
+                         </a>
+                        <p class="publish">Опубликовано {{ post.created_at|date:"d.m.Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    
+    </div>
+</div>
+{% endblock %}

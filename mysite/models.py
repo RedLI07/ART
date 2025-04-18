@@ -5,6 +5,7 @@ from PIL import Image
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import os
+from django.utils.text import slugify
 from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
@@ -83,16 +84,19 @@ class UserPhoto(models.Model):
 
 class NewsPost(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL-адрес")  # Добавляем это поле
     content = models.TextField(verbose_name="Содержание")
     image = models.ImageField(upload_to='news_images/', verbose_name="Изображение")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name="Автор")
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
         ordering = ['-created_at']
-
-    def __str__(self):
-        return self.title

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import *
@@ -92,3 +92,25 @@ def approve_users(request):
 
 def wait_for_approval(request):
     return render(request, 'wait_for_approval.html')
+
+
+def news_list(request):
+    news = NewsPost.objects.filter(is_published=True).order_by('-created_at')
+    return render(request, 'news/list.html', {'news': news})
+
+def news_detail(request, pk):
+    post = get_object_or_404(NewsPost, pk=pk, is_published=True)
+    return render(request, 'news/detail.html', {'post': post})
+
+@user_passes_test(lambda u: u.is_staff)
+def add_news(request):
+    if request.method == 'POST':
+        form = NewsPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('news_list')
+    else:
+        form = NewsPostForm()
+    return render(request, 'news/add.html', {'form': form})

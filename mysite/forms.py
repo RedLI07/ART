@@ -1,7 +1,7 @@
 from django import forms
 from .models import CustomUser, UserPhoto
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, NewsPost
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(required=False, label="Имя")
@@ -49,3 +49,12 @@ class MultiplePhotosForm(forms.Form):
         required=False,
         widget=MultipleFileInput(attrs={'accept': 'image/*'})
     )
+
+
+class NewsPostForm(forms.ModelForm):
+    class Meta:
+        model = NewsPost
+        fields = ('title', 'content', 'image')
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 5}),
+        }

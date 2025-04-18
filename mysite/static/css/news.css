@@ -1,0 +1,103 @@
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+
+
+.main{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 26%;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.post {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 1400px;
+    margin-bottom: 50px;
+    overflow: hidden;
+}
+
+.photo {
+    width: 1400px;
+    max-height: 787.5px;
+    overflow: hidden;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.photo:hover img {
+    transform: scale(1.02);
+}
+
+.card-body {
+    padding: 20px 25px;
+}
+
+.card-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.2rem;
+    color: #d35400;
+    margin: 0 0 10px 0;
+}
+
+.card-footer {
+    padding: 15px 25px;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.card-text {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background: #d35400;
+}
+
+.text-muted {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.add-news .btn {
+    background: #27ae60;
+    margin-bottom: 20px;
+}
+.publish{
+    margin-top: 15px;
+}

@@ -23,6 +23,9 @@ urlpatterns = [
         extra_context={'title': 'Выход из системы'}
     ), name='logout'),
     
-    # Только один админский URL
+
     path('admin/approve-users/', views.approve_users, name='approve_users'),
+    path('news/', views.news_list, name='news_list'),
+    path('news/<slug:slug>/', views.news_detail, name='news_detail'),
+    path('news/add/', views.add_news, name='add_news'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
