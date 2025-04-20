@@ -57,7 +57,13 @@
             </div>
 
             {% if user == user_profile%}
-                <a href="" class="changed-profile">Изменить профиль</a>
+                <div class="work_profile">
+                    <a href="{% url "change_profile" %}" class="changed-profile">Изменить профиль</a>
+                    <form action="{% url "logout" %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Выйти</button>
+                    </form>
+                </div>
             {% endif %}
 
             <h3 class="section-title">Немного обо мне</h3>

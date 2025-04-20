@@ -13,6 +13,7 @@ urlpatterns = [
     path('profile/<str:username>', views.profile, name='user_profile'),
     path('profile/complete/', views.complete_profile, name='complete_profile'),
     path('wait_for_approval/', views.wait_for_approval, name='wait_for_approval'),
+    path('change_profile/', views.change_profile, name='change_profile'),
     
     # Простые URL для входа/выхода
     path('login/', auth_views.LoginView.as_view(

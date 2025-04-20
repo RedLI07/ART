@@ -16,6 +16,7 @@ body{
 
 .container{
     width: 1300px;
+    margin-top: 100px;
 }
 
 
@@ -108,8 +109,7 @@ body{
 }
 
 .changed-profile{
-    display: inline-block;
-    margin-top: 20px;
+
     color:white;
     text-decoration: none;
     font-weight: 500;
@@ -117,4 +117,21 @@ body{
     padding-inline: 20px;
     padding-block: 7px;
     border-radius: 10px;
+}
+
+.work_profile{
+    display: flex;
+    margin-top: 20px;
+}
+
+.btn{
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #ff1e00;
+    padding-inline: 30px;
+    padding-block: 10px;
+    border-radius: 10px; 
+    color: white;
+    border: none;
+    margin-left: 15px;
 }

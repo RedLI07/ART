@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/complet_profile.css" %}">
+{% endblock css %}
+{% block title %}Регистрация{% endblock title %}
+
+
+{% block content %}
+<section class="main">
+    <div class="container">
+        <h2>Заполнение профиля</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="card mb-4">
+                <div class="card-header">Основная информация</div>
+                <div class="card-body">
+                    {{ profile_form.as_p }}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">Аватар</div>
+                <div class="card-body">
+                    {{ avatar_form.as_p }}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">Дополнительные фотографии</div>
+                <div class="card-body">
+                    {{ photos_form.as_p }}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

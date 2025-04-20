@@ -122,3 +122,36 @@ def add_news(request):
     else:
         form = NewsPostForm()
     return render(request, 'news/add.html', {'form': form})
+
+@login_required
+def change_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, instance=request.user)
+        avatar_form = AvatarForm(request.POST, request.FILES)
+        photos_form = MultiplePhotosForm(request.POST, request.FILES)
+
+        if profile_form.is_valid():
+            profile_form.save()
+
+            if avatar_form.is_valid() and 'image' in request.FILES:
+                UserPhoto.objects.filter(user=request.user, is_avatar=True).delete()
+                avatar = avatar_form.save(commit=False)
+                avatar.user = request.user
+                avatar.is_avatar = True
+                avatar.save()
+
+            if photos_form.is_valid() and 'photos' in request.FILES:
+                for file in request.FILES.getlist('photos'):
+                    UserPhoto.objects.create(user=request.user, image=file)
+
+            return redirect('profile')
+    else:
+        profile_form = ProfileForm(instance=request.user)
+        avatar_form = AvatarForm()
+        photos_form = MultiplePhotosForm()
+
+    return render(request, 'complete_profile.html', {
+        'profile_form': profile_form,
+        'avatar_form': avatar_form,
+        'photos_form': photos_form
+    })
