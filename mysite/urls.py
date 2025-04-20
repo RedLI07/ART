@@ -10,6 +10,7 @@ urlpatterns = [
     path('school/', views.school, name='school'),
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
+    path('profile/<str:username>', views.profile, name='user_profile'),
     path('profile/complete/', views.complete_profile, name='complete_profile'),
     path('wait_for_approval/', views.wait_for_approval, name='wait_for_approval'),
     

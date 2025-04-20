@@ -18,9 +18,7 @@ body{
     width: 1300px;
 }
 
-.changed-profile{
-    color: black;
-}
+
 
 .profile-card {
     background: white;
@@ -107,4 +105,16 @@ body{
     color: #f39c12;
     position: absolute;
     left: 0;
+}
+
+.changed-profile{
+    display: inline-block;
+    margin-top: 20px;
+    color:white;
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #007bff;
+    padding-inline: 20px;
+    padding-block: 7px;
+    border-radius: 10px;
 }

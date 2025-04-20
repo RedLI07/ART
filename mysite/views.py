@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import get_user_model
 from .forms import *
 from .models import *
 
@@ -58,18 +59,25 @@ def complete_profile(request):
     })
 
 @login_required
-def profile(request):
-    user = request.user
-    if not user.is_profile_complete():
-        return redirect('complete_profile')
+def profile(request, username=None):
+    User = get_user_model()
+    if username is None:
+        user_profile = request.user
+
+        if not user_profile.is_profile_complete():
+            return redirect('complete_profile')
+        
+    else:
+        user_profile = get_object_or_404(User, username=username)
     
-    avatar = user.photos.filter(is_avatar=True).first()
-    photos = user.photos.filter(is_avatar=False)
+    avatar = user_profile.photos.filter(is_avatar=True).first()
+    photos = user_profile.photos.filter(is_avatar=False)
     
     return render(request, 'profile.html', {
-        'user': user,
+        'user_profile': user_profile,
         'avatar': avatar,
-        'photos': photos
+        'photos': photos,
+        
     })
 
 # Админ-панель для одобрения
