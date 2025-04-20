@@ -125,33 +125,65 @@ def add_news(request):
 
 @login_required
 def change_profile(request):
+    user = request.user
+
     if request.method == 'POST':
-        profile_form = ProfileForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=user)
         avatar_form = AvatarForm(request.POST, request.FILES)
         photos_form = MultiplePhotosForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
             profile_form.save()
 
+            # Обработка аватара
             if avatar_form.is_valid() and 'image' in request.FILES:
-                UserPhoto.objects.filter(user=request.user, is_avatar=True).delete()
+                # Удалить старый аватар
+                UserPhoto.objects.filter(user=user, is_avatar=True).delete()
+                
                 avatar = avatar_form.save(commit=False)
-                avatar.user = request.user
+                avatar.user = user
                 avatar.is_avatar = True
                 avatar.save()
 
+            # Обработка дополнительных фото
             if photos_form.is_valid() and 'photos' in request.FILES:
                 for file in request.FILES.getlist('photos'):
-                    UserPhoto.objects.create(user=request.user, image=file)
+                    UserPhoto.objects.create(user=user, image=file)
 
             return redirect('profile')
+
     else:
-        profile_form = ProfileForm(instance=request.user)
+        profile_form = ProfileForm(instance=user)
         avatar_form = AvatarForm()
         photos_form = MultiplePhotosForm()
 
-    return render(request, 'complete_profile.html', {
+    # Получение текущего аватара и фото
+    avatar = UserPhoto.objects.filter(user=user, is_avatar=True).first()
+    user_photos = UserPhoto.objects.filter(user=user, is_avatar=False)
+
+    return render(request, 'change_profile.html', {
         'profile_form': profile_form,
         'avatar_form': avatar_form,
-        'photos_form': photos_form
+        'photos_form': photos_form,
+        'avatar': avatar,
+        'user_photos': user_photos,
     })
+
+def user_list(request):
+    users = CustomUser.objects.all().order_by('-bricks_count')
+
+    user_data = []
+    for user in users:
+        avatar = user.photos.filter(is_avatar=True).first()
+        user_data.append({
+            'user': user,
+            'avatar': avatar,
+            'bricks': user.get_bricks_display(),
+        })
+
+    context = {
+        'title': 'Список участников',
+        'users': user_data
+    }
+
+    return render(request, 'participants.html', context)

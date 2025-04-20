@@ -15,13 +15,13 @@
 {% block css %}
     <link rel="stylesheet" href="{% static "css/complet_profile.css" %}">
 {% endblock css %}
-{% block title %}Регистрация{% endblock title %}
+{% block title %}Изменить профиль{% endblock title %}
 
 
 {% block content %}
 <section class="main">
     <div class="container">
-        <h2>Заполнение профиля</h2>
+        <h2>Изменение профиля</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             

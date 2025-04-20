@@ -58,3 +58,10 @@ class NewsPostForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 5}),
         }
+
+class AvatarForm(forms.ModelForm):
+    image = forms.ImageField(required=False, label="Загрузить новый аватар")
+
+    class Meta:
+        model = UserPhoto
+        fields = ['image']

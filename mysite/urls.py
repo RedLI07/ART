@@ -14,8 +14,7 @@ urlpatterns = [
     path('profile/complete/', views.complete_profile, name='complete_profile'),
     path('wait_for_approval/', views.wait_for_approval, name='wait_for_approval'),
     path('change_profile/', views.change_profile, name='change_profile'),
-    
-    # Простые URL для входа/выхода
+    path('participants/', views.user_list, name='participants'),
     path('login/', auth_views.LoginView.as_view(
         template_name='login.html',
         extra_context={'title': 'Вход в систему'}

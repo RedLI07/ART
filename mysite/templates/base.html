@@ -19,7 +19,7 @@
         <section class="head-search">
             <ul>
                 <a href="{% url "news_list" %}" class="link">Наши новости</a>
-                <a href="" class="link midle-ref">Комсостав</a>
+                <a href="{% url "participants" %}" class="link midle-ref">Бойцы</a>
                 <a href="{% url "school" %}" class="link">Школа вожатых</a>
                 {% if user.is_authenticated %}
                     <a href="{% url "profile" %}" class="link last-link">Профиль</a>
