@@ -80,23 +80,6 @@ def profile(request, username=None):
         
     })
 
-# Админ-панель для одобрения
-@user_passes_test(lambda u: u.is_superuser)
-def approve_users(request):
-    if request.method == 'POST':
-        user_id = request.POST.get('user_id')
-        action = request.POST.get('action')
-        
-        user = CustomUser.objects.get(id=user_id)
-        if action == 'approve':
-            user.is_approved = True
-            user.save()
-            user.send_approval_email()
-            messages.success(request, f'Пользователь {user.get_full_name()} одобрен!')
-    
-    unapproved = CustomUser.objects.filter(is_approved=False)
-    return render(request, 'admin/approve_users.html', {'users': unapproved})
-
 
 def wait_for_approval(request):
     return render(request, 'wait_for_approval.html')
@@ -187,3 +170,112 @@ def user_list(request):
     }
 
     return render(request, 'participants.html', context)
+
+def is_admin(user):
+    return user.is_authenticated and (user.is_superuser or user.is_staff)
+
+@user_passes_test(is_admin)
+def admin_panel(request):
+    context = {
+        'unapproved_users': CustomUser.objects.filter(is_approved=False),
+        'all_users': CustomUser.objects.exclude(id=request.user.id),
+        'recent_news': NewsPost.objects.order_by('-created_at')[:5]
+    }
+    return render(request, 'admin.html', context)
+
+@user_passes_test(is_admin)
+def approve_user(request, user_id):
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.is_approved = True
+        user.save()
+        messages.success(request, f'Пользователь {user.username} подтверждён')
+    return redirect('admin_panel')
+
+@user_passes_test(is_admin)
+def reject_user(request, user_id):
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser, id=user_id)
+        username = user.username
+        user.delete()
+        messages.warning(request, f'Пользователь {username} отклонён и удалён')
+    return redirect('admin_panel')
+
+@user_passes_test(is_admin)
+def assign_role(request):
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser, id=request.POST.get('user_id'))
+        role = request.POST.get('role')
+        
+        if role == 'press_secretary':
+            user.is_staff = True
+            user.save()
+            messages.success(request, f'{user.username} назначен пресс-секретарём')
+        elif role == 'commander':
+            # Логика для назначения командира
+            messages.success(request, f'{user.username} назначен командиром')
+        
+    return redirect('admin_panel')
+
+
+@user_passes_test(is_admin)
+def delete_user(request):
+    if request.method == 'POST':
+        try:
+            user_id = request.POST.get('user_to_delete')
+            if not user_id:
+                messages.error(request, "Не выбран пользователь для удаления")
+                return redirect('admin_panel')
+            
+            user = get_object_or_404(CustomUser, id=user_id)
+            
+            # Запрещаем удаление самого себя
+            if user.id == request.user.id:
+                messages.error(request, "Вы не можете удалить самого себя!")
+                return redirect('admin_panel')
+            
+            username = user.username
+            user.delete()
+            messages.success(request, f'Пользователь {username} успешно удалён')
+            
+        except Exception as e:
+            messages.error(request, f'Ошибка при удалении: {str(e)}')
+    
+    return redirect('admin_panel')
+
+@user_passes_test(is_admin)
+def add_news(request):
+    if request.method == 'POST':
+        form = NewsPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            news = form.save(commit=False)
+            news.author = request.user
+            news.save()
+            messages.success(request, 'Новость успешно добавлена')
+            return redirect('admin_panel')
+    else:
+        form = NewsPostForm()
+    
+    return render(request, 'add_news.html', {'form': form})
+
+@user_passes_test(is_admin)
+def edit_news(request, news_id):
+    news = get_object_or_404(NewsPost, id=news_id)
+    if request.method == 'POST':
+        form = NewsPostForm(request.POST, request.FILES, instance=news)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Новость обновлена')
+            return redirect('admin_panel')
+    else:
+        form = NewsPostForm(instance=news)
+    
+    return render(request, 'edit_news.html', {'form': form, 'news': news})
+
+@user_passes_test(is_admin)
+def delete_news(request, news_id):
+    if request.method == 'POST':
+        news = get_object_or_404(NewsPost, id=news_id)
+        news.delete()
+        messages.warning(request, 'Новость удалена')
+    return redirect('admin_panel')

@@ -22,7 +22,7 @@ body{
 
 
 .profile-card {
-    background: white;
+    background: #f5efe6;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     padding: 30px;
@@ -73,7 +73,7 @@ body{
 }
 .info-label {
     font-weight: 600;
-    color: #7f8c8d;
+    color: #5a4a42;
     display: inline-block;
     width: 120px;
 }
@@ -83,14 +83,15 @@ body{
     font-weight: 600;
     margin: 25px 0 15px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #f1f1f1;
+    border-bottom: 2px solid #d4c8b8;
     
 }
 .about-text {
-    background: #f8f9fa;
+    background: #f8f4ee;
     padding: 20px;
     border-radius: 10px;
     line-height: 1.6;
+    color:#5a4a42;
 }
 .achievements-list {
     list-style-type: none;
@@ -113,7 +114,7 @@ body{
     color:white;
     text-decoration: none;
     font-weight: 500;
-    background-color: #007bff;
+    background-color: #8c3c3c;
     padding-inline: 20px;
     padding-block: 7px;
     border-radius: 10px;
@@ -134,4 +135,14 @@ body{
     color: white;
     border: none;
     margin-left: 15px;
+}
+
+.admin{
+    a{
+        background-color: #0cbedd;
+        margin-left: 0;
+        padding-inline: 70px;
+    }
+    
+    margin-top: 20px;
 }

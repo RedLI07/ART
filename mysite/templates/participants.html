@@ -13,30 +13,32 @@
 {% endblock shrift %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "css/profile.css" %}">
+    <link rel="stylesheet" href="{% static "css/participants.css" %}">
 {% endblock css %}
 {% block title %}{{ user.username }}{% endblock title %}
 
 {% block content %}
 
 <section class="main">
+    <h2>Участники</h2>
     <div class="container">
-        <h2>Участники</h2>
+        
 
         <section class="friends">
             <h3>{{ title }} ({{ users|length }})</h3>
 
+        
             {% for u in users %}
                 <article class="already-friends">
                     <a class="midle" href="{% url 'user_profile' u.user.username %}">
                         {% if u.avatar %}
-                            <img src="{{ u.avatar.image.url }}" alt="аватар {{ u.user.username }}">
-                        {% else %}
-                            <img src="{% static 'default_avatar.png' %}" alt="без аватара">
+                            <img class="user-ava" src="{{ u.avatar.image.url }}" alt="аватар {{ u.user.username }}">
                         {% endif %}
                     </a>
-                    <a class="midle">{{ u.user.username }}</a>
-                    <a class="status bricks">{{ u.bricks }}</a>
+                    <div class="name">
+                        <a class="username">{{ u.user.username }}</a>
+                        <a class="status bricks">{{ u.bricks }}</a>    
+                    </div>
                 </article>
             {% endfor %}
         </section>

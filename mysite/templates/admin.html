@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center/cover;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/admin.css" %}">
+{% endblock css %}
+{% block title %}Администрирование{% endblock title %}
+
+
+{% block content %}
+<div class="main">
+    <div class="container">
+        <section class="admin-header">
+            <h1>Администрирование</h1>
+        </section>
+    
+        <div class="admin-grid">
+            <!-- Блок управления пользователями -->
+            <section class="admin-card">
+                <h2><i class="fas fa-users-cog"></i> Управление бойцами</h2>
+                
+                <div class="admin-section">
+                    <h3>Подтверждение новых</h3>
+                    <ul class="pending-users">
+                        {% for user in unapproved_users %}
+                        <li>
+                            {{ user.username }} ({{ user.join_year }})
+                            <div class="admin-actions">
+                                <form method="post" action="{% url 'approve_user' user.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-approve">✓</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_user' user.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-reject">✗</button>
+                                </form>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li>Нет пользователей для подтверждения</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+    
+                <div class="admin-section">
+                    <h3>Назначение ролей</h3>
+                    <form method="post" class="role-form">
+                        {% csrf_token %}
+                        <select name="user_id" required>
+                            <option value="">Выберите бойца</option>
+                            {% for user in all_users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="role" required>
+                            <option value="">Выберите роль</option>
+                            <option value="press_secretary">Пресс-секретарь</option>
+                            <option value="commander">Командир</option>
+                        </select>
+                        <button type="submit" class="btn-assign">Назначить</button>
+                    </form>
+                </div>
+    
+                <div class="admin-section">
+                    <h3>Удаление бойцов</h3>
+                    <form method="post" action="{% url 'delete_user' %}" class="delete-form" 
+                          onsubmit="return confirm('Вы точно хотите удалить этого пользователя?')">
+                        {% csrf_token %}
+                        <select name="user_to_delete" required>
+                            <option value="">Выберите бойца</option>
+                            {% for user in all_users %}
+                                <option value="{{ user.id }}">
+                                    {{ user.username }} ({{ user.get_bricks_display }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn-delete">
+                            <i class="fas fa-trash-alt"></i> Удалить
+                        </button>
+                    </form>
+                </div>
+            </section>
+    
+            <!-- Блок управления новостями -->
+            <section class="admin-card">
+                <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
+                
+                <div class="admin-section">
+                    <h3>Добавить новость</h3>
+                    <a href="{% url 'add_news' %}" class="btn-add">+ Создать новость</a>
+                </div>
+    
+                <div class="admin-section">
+                    <h3>Последние новости</h3>
+                    <ul class="news-list">
+                        {% for news in recent_news %}
+                        <li>
+                            {{ news.title }}
+                            <span class="news-date">{{ news.created_at|date:"d.m.Y" }}</span>
+                            <div class="news-actions">
+                                <a href="{% url 'edit_news' news.id %}" class="btn-edit">✎</a>
+                                <form method="post" action="{% url 'delete_news' news.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-delete">✗</button>
+                                </form>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li>Нет последних новостей</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

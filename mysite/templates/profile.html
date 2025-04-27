@@ -65,7 +65,14 @@
                     </form>
                 </div>
             {% endif %}
-
+            
+            {% if user.is_staff %}
+                <div class="admin">
+                    <a href="{% url 'admin_panel' %}" class="btn btn-primary">
+                        Администрирование
+                    </a>
+                </div>
+            {% endif %}
             <h3 class="section-title">Немного обо мне</h3>
             <div class="about-text">
                 {% if user.about %}

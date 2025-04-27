@@ -24,9 +24,15 @@ urlpatterns = [
         extra_context={'title': 'Выход из системы'}
     ), name='logout'),
     
-
-    path('admin/approve-users/', views.approve_users, name='approve_users'),
     path('news/', views.news_list, name='news_list'),
     path('news/<slug:slug>/', views.news_detail, name='news_detail'),
     path('news/add/', views.add_news, name='add_news'),
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
+    path('approve-user/<int:user_id>/', views.approve_user, name='approve_user'),
+    path('reject-user/<int:user_id>/', views.reject_user, name='reject_user'),
+    path('assign-role/', views.assign_role, name='assign_role'),
+    path('delete-user/', views.delete_user, name='delete_user'),
+    path('add-news/', views.add_news, name='add_news'),
+    path('edit-news/<int:news_id>/', views.edit_news, name='edit_news'),
+    path('delete-news/<int:news_id>/', views.delete_news, name='delete_news'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
