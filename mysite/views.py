@@ -277,7 +277,7 @@ def add_news(request):
     else:
         form = NewsPostForm()
     
-    return render(request, 'news/add_news.html', {'form': form})
+    return render(request, 'news/add.html', {'form': form})
 
 @can_manage_news
 def edit_news(request, pk):

@@ -1,0 +1,113 @@
+body{
+    width: 100vw;
+    height: 100vh;
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Jost', sans-serif;
+    background-color: #f5efe6;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2{
+    font-family: 'Nosifer', cursive;
+    color: #d35400;
+}
+
+
+.news-form-card h2 {
+    font-weight: 700;
+    font-size: 30px;
+    color: #f57c00;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.news-form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.news-form-card label {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.news-form-card input[type="text"],
+.news-form-card textarea,
+.news-form-card select,
+.news-form-card input[type="file"] {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+.news-form-card textarea {
+    min-height: 150px; /* чтобы textarea был побольше */
+    resize: vertical;
+}
+
+.news-form-card input[type="text"]:focus,
+.news-form-card textarea:focus,
+.news-form-card select:focus,
+.news-form-card input[type="file"]:focus {
+    border-color: #00bcd4;
+    outline: none;
+}
+
+.news-form-card .btn-primary,
+.news-form-card .btn-secondary {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.news-form-card .btn-primary {
+    background-color: #00bcd4;
+}
+
+.news-form-card .btn-primary:hover {
+    background-color: #0097a7;
+}
+
+.news-form-card .btn-secondary {
+    background-color: #f44336;
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.news-form-card .btn-secondary:hover {
+    background-color: #d32f2f;
+}
