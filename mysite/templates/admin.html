@@ -33,7 +33,7 @@
                 
                 <div class="admin-section">
                     <h3>Назначение ролей</h3>
-                    <form method="post" class="role-form">
+                    <form action="{% url "assign_role" %}" method="post" class="role-form">
                         {% csrf_token %}
                         <select name="user_id" required>
                             <option value="">Выберите бойца</option>
@@ -43,7 +43,7 @@
                         </select>
                         <select name="role" required>
                             <option value="">Выберите роль</option>
-                            <option value="press_secretary">Пресс-секретарь</option>
+                            <option value="press">Пресс-секретарь</option>
                             <option value="commander">Командир</option>
                         </select>
                         <button type="submit" class="btn-assign">Назначить</button>

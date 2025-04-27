@@ -247,24 +247,22 @@ def delete_user(request):
 @admin_required
 def assign_role(request):
     if request.method == 'POST':
-        form = AssignRoleForm(request.POST)
-        if form.is_valid():
-            user = form.cleaned_data['user']
-            user.role = form.cleaned_data['role']
-            
-            if user.role == CustomUser.COMMANDER:
-                user.is_staff = True
-                user.is_superuser = True
-            elif user.role == CustomUser.PRESS_SECRETARY:
-                user.is_staff = True
-            
+        user = get_object_or_404(CustomUser, id=request.POST.get('user_id'))
+        role = request.POST.get('role')
+        
+        if role == 'press':
+            user.role = CustomUser.PRESS_SECRETARY
             user.save()
-            messages.success(request, f'Роль {user.get_role_display()} назначена {user.username}')
-            return redirect('admin_panel')
-    else:
-        form = AssignRoleForm()
-    
-    return render(request, 'admin/assign_role.html', {'form': form})
+            messages.success(request, f'{user.username} назначен пресс-секретарём.')
+        elif role == 'commander':
+            user.role = CustomUser.COMMANDER  
+            user.is_staff = True
+            user.save()
+            messages.success(request, f'{user.username} назначен командиром.')
+        else:
+            messages.error(request, 'Недопустимая роль.')
+
+    return redirect('admin_panel')
 
 @can_manage_news
 def add_news(request):
