@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect,  get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
+from .decorators import admin_required, can_manage_news
 from .forms import *
 from .models import *
 
@@ -243,7 +244,29 @@ def delete_user(request):
     
     return redirect('admin_panel')
 
-@user_passes_test(is_admin)
+@admin_required
+def assign_role(request):
+    if request.method == 'POST':
+        form = AssignRoleForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            user.role = form.cleaned_data['role']
+            
+            if user.role == CustomUser.COMMANDER:
+                user.is_staff = True
+                user.is_superuser = True
+            elif user.role == CustomUser.PRESS_SECRETARY:
+                user.is_staff = True
+            
+            user.save()
+            messages.success(request, f'Роль {user.get_role_display()} назначена {user.username}')
+            return redirect('admin_panel')
+    else:
+        form = AssignRoleForm()
+    
+    return render(request, 'admin/assign_role.html', {'form': form})
+
+@can_manage_news
 def add_news(request):
     if request.method == 'POST':
         form = NewsPostForm(request.POST, request.FILES)
@@ -252,27 +275,26 @@ def add_news(request):
             news.author = request.user
             news.save()
             messages.success(request, 'Новость успешно добавлена')
-            return redirect('admin_panel')
+            return redirect('news_list')
     else:
         form = NewsPostForm()
     
-    return render(request, 'add_news.html', {'form': form})
+    return render(request, 'news/add_news.html', {'form': form})
 
-@user_passes_test(is_admin)
-def edit_news(request, news_id):
-    news = get_object_or_404(NewsPost, id=news_id)
+@can_manage_news
+def edit_news(request, pk):
+    news = get_object_or_404(NewsPost, pk=pk)
     if request.method == 'POST':
         form = NewsPostForm(request.POST, request.FILES, instance=news)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Новость обновлена')
-            return redirect('admin_panel')
+            messages.success(request, 'Новость успешно обновлена')
+            return redirect('news_detail', pk=news.pk)
     else:
         form = NewsPostForm(instance=news)
     
-    return render(request, 'edit_news.html', {'form': form, 'news': news})
-
-@user_passes_test(is_admin)
+    return render(request, 'news/edit_news.html', {'form': form, 'news': news})
+@can_manage_news
 def delete_news(request, news_id):
     if request.method == 'POST':
         news = get_object_or_404(NewsPost, id=news_id)

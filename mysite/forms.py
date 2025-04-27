@@ -65,3 +65,13 @@ class AvatarForm(forms.ModelForm):
     class Meta:
         model = UserPhoto
         fields = ['image']
+
+class AssignRoleForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=CustomUser.objects.filter(is_approved=True),
+        label="Пользователь"
+    )
+    role = forms.ChoiceField(
+        choices=CustomUser.ROLE_CHOICES,
+        label="Роль"
+    )

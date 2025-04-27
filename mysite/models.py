@@ -21,9 +21,17 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_approved', True)
+        extra_fields.setdefault('role', CustomUser.COMMANDER)
         return self.create_user(username, password, **extra_fields)
 
 class CustomUser(AbstractUser):
+    PRESS_SECRETARY = 'press'
+    COMMANDER = 'commander'
+    ROLE_CHOICES = [
+        (PRESS_SECRETARY, 'Пресс-секретарь'),
+        (COMMANDER, 'Командир'),
+    ]
+    
     username = models.CharField(max_length=150, unique=True, verbose_name="Логин")
     join_year = models.PositiveIntegerField(
         verbose_name="Год вступления",
@@ -38,11 +46,18 @@ class CustomUser(AbstractUser):
     about = models.TextField(verbose_name="О себе", blank=True, null=True)
     achievements = models.TextField(verbose_name="Достижения", blank=True, null=True)
     is_approved = models.BooleanField(default=False)
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Роль"
+    )
+
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
 
     def is_profile_complete(self):
         return all([
@@ -53,6 +68,9 @@ class CustomUser(AbstractUser):
 
     def get_bricks_display(self):
         return "Кандидат" if self.bricks_count == 0 else f"{self.bricks_count} кирпича"
+    
+    def can_manage_news(self):
+        return self.role in [self.COMMANDER, self.PRESS_SECRETARY] or self.is_superuser
 
 class UserPhoto(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='photos')

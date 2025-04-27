@@ -2,16 +2,22 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, NewsPost
 
-class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'is_approved')
-    list_editable = ('is_approved',)  # Разрешить редактирование галочки в списке
-    actions = ['approve_users']
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'role', 'is_staff', 'is_superuser', 'is_approved')
+    list_filter = ('role', 'is_staff', 'is_superuser')
+    list_editable = ('is_approved',)
+    actions = ['make_press_secretary', 'make_commander']
 
-    def approve_users(self, request, queryset):
-        queryset.update(is_approved=True)
-    approve_users.short_description = "Одобрить выбранных пользователей"
+    def make_press_secretary(self, request, queryset):
+        queryset.update(role=CustomUser.PRESS_SECRETARY, is_staff=True)
+    make_press_secretary.short_description = "Назначить пресс-секретарями"
+
+    def make_commander(self, request, queryset):
+        queryset.update(role=CustomUser.COMMANDER, is_staff=True, is_superuser=True)
+    make_commander.short_description = "Назначить командирами"
 
 admin.site.register(CustomUser, CustomUserAdmin)
+
 
 @admin.register(NewsPost)
 class NewsPostAdmin(admin.ModelAdmin):
