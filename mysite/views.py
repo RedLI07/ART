@@ -18,7 +18,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_approved = False  # Требуется одобрение админа
+            user.is_approved = False 
             user.save()
             return redirect('wait_for_approval')
     else:
@@ -252,15 +252,21 @@ def assign_role(request):
         
         if role == 'press':
             user.role = CustomUser.PRESS_SECRETARY
-            user.save()
-            messages.success(request, f'{user.username} назначен пресс-секретарём.')
-        elif role == 'commander':
-            user.role = CustomUser.COMMANDER  
             user.is_staff = True
             user.save()
-            messages.success(request, f'{user.username} назначен командиром.')
+            messages.success(request, f"Пользователь {user.username} назначен пресс-секретарём.")
+        elif role == 'commander':
+            user.role = CustomUser.COMMANDER
+            user.is_staff = True
+            user.save()
+            messages.success(request, f"Пользователь {user.username} назначен командиром.")
+        elif role == 'fighter':  
+            user.role = None
+            user.is_staff = False
+            user.save()
+            messages.success(request, f"Пользователь {user.username} назначен обычным бойцом.")
         else:
-            messages.error(request, 'Недопустимая роль.')
+            messages.error(request, "Выбрана недопустимая роль.")
 
     return redirect('admin_panel')
 
@@ -299,3 +305,5 @@ def delete_news(request, news_id):
         news.delete()
         messages.warning(request, 'Новость удалена')
     return redirect('admin_panel')
+
+

@@ -10,6 +10,10 @@ body{
     grid-template-columns: 4fr 1fr;
 }
 
+.link{
+    color: #800000;
+}
+
 /* .text{
     background-color: red;
 }

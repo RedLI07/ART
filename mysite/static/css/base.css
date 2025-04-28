@@ -26,7 +26,6 @@ header{
         align-items: center;
         justify-content: center;
         .link{
-            color: white;
             font-size: 30px;
             text-decoration:none;
             position:relative;

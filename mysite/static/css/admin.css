@@ -1,6 +1,7 @@
 body{
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 .main{
@@ -145,4 +146,41 @@ select {
     color: #777;
     font-size: 0.9rem;
     margin-left: 10px;
+}
+.link{
+    color: #800000;
+}
+
+.alert {
+    padding: 15px 20px;
+    margin: 10px auto;
+    border-radius: 10px;
+    width: 90%;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    position: absolute;
+    z-index: 1;
+    margin-left: 75px;
+    animation: alrt 5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@keyframes alrt {
+    0%{opacity: 0;}
+    25%{opacity: 0.7;}
+    50%{opacity: 1;}
+    100%{opacity: 0;
+    display: none;
+    }
 }

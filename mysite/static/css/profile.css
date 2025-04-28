@@ -1,6 +1,7 @@
 body{
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .main{
@@ -11,12 +12,13 @@ body{
 
 .main{
     width: 100%;
-    height: 100%;
+    min-height: 100%;
 }
 
 .container{
     width: 1300px;
-    margin-top: 100px;
+    margin-top: 200px;
+  
 }
 
 
@@ -65,7 +67,7 @@ body{
     left: 0;
     width: 50px;
     height: 3px;
-    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    background: #d4c8b8
 }
 .info-item {
     margin-bottom: 10px;
@@ -145,4 +147,62 @@ body{
     }
     
     margin-top: 20px;
+}
+
+.link{
+    color: #800000;
+}
+
+.photo-slider {
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-top: 20px;
+    padding-bottom: 10px;
+}
+
+.photo-track {
+    display: flex;
+    gap: 15px;
+}
+
+.photo-slide {
+    flex: 0 0 auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.photo-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: transform 0.3s;
+}
+
+.photo-slide img:hover {
+    transform: scale(1.05);
+}
+
+.delete-photo-form {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.delete-photo-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.3s;
+}
+
+.delete-photo-btn:hover {
+    background-color: #c0392b;
 }

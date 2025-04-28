@@ -95,6 +95,20 @@
                     <li style="color: #6c757d;">Достижения не указаны</li>
                 {% endif %}
             </ul>
+
+            <h3 class="section-title">Фотографии</h3>
+
+            {% if photos %}
+            <div class="photo-slider">
+                <div class="photo-track">
+                    {% for photo in photos %}
+                        <div class="photo-slide">
+                            <img src="{{ photo.image.url }}" alt="Фото пользователя">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </section>

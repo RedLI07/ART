@@ -19,6 +19,16 @@
 
 
 {% block content %}
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <div class="main">
     <div class="container">
         <section class="admin-header">
@@ -45,6 +55,7 @@
                             <option value="">Выберите роль</option>
                             <option value="press">Пресс-секретарь</option>
                             <option value="commander">Командир</option>
+                            <option value="fighter">Боец</option> 
                         </select>
                         <button type="submit" class="btn-assign">Назначить</button>
                     </form>

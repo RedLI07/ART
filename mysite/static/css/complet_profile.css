@@ -104,5 +104,6 @@ textarea.form-control {
     background: linear-gradient(135deg, #5a0db5 0%, #1a65e0 100%);
 }
 
-
-
+.link{
+    color: #800000;
+}
