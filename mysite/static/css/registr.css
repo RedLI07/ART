@@ -22,7 +22,7 @@ body{
 }
 
 .content{
-    height: 570px;
+    height: 620px;
     width: 420px;
     display: flex;
     justify-content: center;
@@ -48,12 +48,14 @@ body{
             margin-bottom: 5px;
         }
         input{
-            border: none;           /* Убираем стандартную рамку */
-            border-bottom: 2px solid #ffffff; /* Добавляем линию снизу */
-            outline: none;          /* Убираем свечение при фокусе */
+            border: none;           
+            border-bottom: 2px solid #d4c8b8; 
+            outline: none;         
             padding: 5px 0;       
             background: transparent; 
             width: 230px;
+            font-size: 16px;
+            color: #5a4a42;
         }
         input:focus {
             outline: none !important;
@@ -72,12 +74,12 @@ body{
             background: linear-gradient(135deg, #e4bd82 0%, #e7cd75 100%);
             border: none;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-block: 13px;
     }
 }
 }
 
-a:active, /* активная/посещенная ссылка */
+a:active, 
 a:hover,  
 a:link,
 a:visited 

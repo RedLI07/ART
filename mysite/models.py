@@ -32,7 +32,7 @@ class CustomUser(AbstractUser):
         (COMMANDER, 'Командир'),
     ]
     
-    username = models.CharField(max_length=150, unique=True, verbose_name="Логин")
+    username = models.CharField(max_length=50, unique=True, verbose_name="Логин")
     join_year = models.PositiveIntegerField(
         verbose_name="Год вступления",
         null=True,

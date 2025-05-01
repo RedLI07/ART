@@ -154,7 +154,7 @@ def change_profile(request):
     })
 
 def user_list(request):
-    users = CustomUser.objects.all().order_by('-bricks_count')
+    users = CustomUser.objects.filter(is_approved=True).order_by('-bricks_count')
 
     user_data = []
     for user in users:

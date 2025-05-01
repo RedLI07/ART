@@ -20,24 +20,20 @@
 {% block content %}
 
 <section class="main">
-    <h2>Участники</h2>
+    <h2 class="title">Участники</h2>
     <div class="container">
-        
-
         <section class="friends">
-            <h3>{{ title }} ({{ users|length }})</h3>
-
-        
+            <h3 class="subtitle">{{ title }} ({{ users|length }})</h3>
             {% for u in users %}
                 <article class="already-friends">
                     <a class="midle" href="{% url 'user_profile' u.user.username %}">
                         {% if u.avatar %}
-                            <img class="user-ava" src="{{ u.avatar.image.url }}" alt="аватар {{ u.user.username }}">
+                            <img src="{{ u.avatar.image.url }}" alt="аватар {{ u.user.username }}">
                         {% endif %}
                     </a>
                     <div class="name">
-                        <a class="username">{{ u.user.username }}</a>
-                        <a class="status bricks">{{ u.bricks }}</a>    
+                        <a class="username" href="{% url 'user_profile' u.user.username %}">{{ u.user.username }}</a>
+                        <div class="status bricks">{{ u.bricks }}</div>
                     </div>
                 </article>
             {% endfor %}
