@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-ljr&)5movjqczfi!hc^!+1=@llhus(y@s+6@v!z6^%ys%h6uk*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['62.118.134.111 ', '*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -164,5 +164,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.serveo.net',  # Разрешает все поддомены Serveo
-    'https://59421fafa090fecf57d4e1805b113015.serveo.net',  # Конкретный URL
+    'https://90763a4a33623f6f30dc26e6c263e32c.serveo.net',
+    'https://49c8a22d75007c568a267225718af502.serveo.net',
+        # Конкретный URL
 ]

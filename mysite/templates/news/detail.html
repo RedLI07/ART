@@ -1,34 +1,70 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block shrift %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+    </style>
+{% endblock shrift %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock css %}
+{% block title %}{{ post.title }}{% endblock title %}
 
 {% block content %}
-<div class="container mt-5">
-    <article>
-        <div class="text-center mb-4">
-            <h1>{{ post.title }}</h1>
-            <p class="text-muted">
-                Опубликовано {{ post.created_at|date:"d.m.Y" }} автором {{ post.author.get_full_name }}
-            </p>
-        </div>
-        
-        <div class="mb-4">
-            <img src="{{ post.image.url }}" class="img-fluid rounded" alt="{{ post.title }}">
-        </div>
-        
-        <div class="news-content">
-            {{ post.content|linebreaks }}
-        </div>
-        
-        <div class="mt-4">
-            <a href="{% url 'news_list' %}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left"></i> Назад к списку новостей
-            </a>
+<section class="main">
+    <div class="container">
+        <article>
+            <div class="text-center mb-4">
+                <h1>{{ post.title }}</h1>
+                <p class="text-muted">
+                    Опубликовано {{ post.created_at|date:"d.m.Y" }}
+                </p>
+            </div>
             
-            {% if user.is_staff %}
-            <a href="{% url 'admin:news_newspost_change' post.id %}" class="btn btn-outline-secondary">
-                <i class="fas fa-edit"></i> Редактировать
-            </a>
+            {% if post.image %}
+            <div class="post-image-container">
+                <img src="{{ post.image.url }}" class="post-image" alt="{{ post.title }}">
+            </div>
             {% endif %}
-        </div>
-    </article>
-</div>
+            
+            <div class="news-content">
+                {{ post.content|linebreaks }}
+            </div>
+            
+            <div class="post-actions">
+                <a href="{% url 'news_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i> Назад к списку новостей
+                </a>
+                
+                {% if user.role == 'commander' or user.role == 'press' %}
+                <div class="staff-actions">
+                    <a href="{% url 'edit_news' post.id %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </a>
+    
+                    <form method="post" action="{% url 'delete_news' post.id %}" class="btn btn-outline-danger">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete icon-button"><i class="fas fa-trash"></i> Удалить</button>
+                    </form>
+                    {% comment %} <a href="{% url 'delete_news' post.id %}" class="btn btn-outline-danger">
+                        <i class="fas fa-trash"></i> Удалить
+                    </a> {% endcomment %}
+                </div>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+</section>
 {% endblock %}

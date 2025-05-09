@@ -27,7 +27,7 @@
                 <p>Логин:</p>
                 {{ form.username }}
                 {{ form.username.errors }}
-                <small class="form-text text-muted">Обязательное поле. Не более 150 символов.</small>
+                <small class="form-text text-muted">Обязательное поле. Не более 50 символов.</small>
             </div>
             <div class="form-group">
                 <p>Имя:</p>
@@ -49,6 +49,11 @@
                 <p>Подтверждение пароля:</p>
                 {{ form.password2 }}
                 {{ form.password2.errors }}
+            </div>
+            <div class="form-group qr">
+                <p>Ссылка на VK:</p>
+                {{ form.vk_link }}
+                {{ form.vk_link.errors }}
             </div>
             
             <div class="btn">

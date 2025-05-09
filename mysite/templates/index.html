@@ -41,5 +41,165 @@
         <!-- <img src="image/foto4.png" class="photo photo2"> -->
         <img src="{% static "img/foto5.png" %}" class="photo photo5">
     </section>
+
+
+    <section class="info-section">
+        <h2>Что такое РСО?</h2>
+        <p>
+            Молодежная общероссийская общественная организация «Российские Студенческие Отряды» (РСО) –
+            крупнейшая молодежная организация страны, которая обеспечивает временной трудовой занятостью
+            более 400 тысяч молодых людей из 85 субъектов РФ.
+        </p>
+        
+      
+        <div class="slider-container">
+            <div class="slider" id="photoSlider">
+                <div class="slide">
+                    <img src="{% static 'img/index/lager.png' %}" alt="Работа отряда">
+                    <div class="slide-caption">Наши бойцы в летнем лагере, 2023 год</div>
+                </div>
+                <div class="slide">
+                    <img src="{% static 'img/index/sbor.png' %}" alt="Мероприятия">
+                    <div class="slide-caption">Тренинг для вожатых перед сезоном</div>
+                </div>
+                <div class="slide">
+                    <img src="{% static 'img/index/achiv.png' %}" alt="Награждение">
+                    <div class="slide-caption">Награждение лучших бойцов сезона</div>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button class="slider-btn prev-btn">❮</button>
+                <button class="slider-btn next-btn">❯</button>
+            </div>
+            <div class="slider-dots" id="photoDots"></div>
+        </div>
+        
+        <p>
+            Датой начала развития движения считается <strong>17 февраля 2004 года</strong>,
+            когда состоялся Всероссийский форум студенческих отрядов.
+        </p>
+    
+        <h2>Основные задачи РСО:</h2>
+        <ul>
+            <li>Содействие трудоустройству студентов и выпускников;</li>
+            <li>Привлечение молодежи к трудовой деятельности;</li>
+            <li>Патриотическое воспитание и сохранение традиций;</li>
+            <li>Формирование кадрового резерва для экономики России.</li>
+        </ul>
+        
+        <!-- Второй слайдер - Достижения -->
+        <div class="slider-container">
+            <div class="slider" id="achievementsSlider">
+                <div class="slide" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem;">
+                    <h3 style="color: #d62828; font-size: 1.8rem; margin-bottom: 1rem;">65 лет истории</h3>
+                    <p style="text-align: center; font-size: 1.2rem; max-width: 600px;">Движению студенческих отрядов России в 2024 году исполнилось 65 лет! Через эту школу прошли более 20 миллионов человек.</p>
+                </div>
+                <div class="slide" style="background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem;">
+                    <h3 style="color: #d62828; font-size: 1.8rem; margin-bottom: 1rem;">Крупные проекты</h3>
+                    <p style="text-align: center; font-size: 1.2rem; max-width: 600px;">Участие в строительстве космодромов, Олимпиаде в Сочи, Чемпионате мира по футболу и других значимых событиях страны.</p>
+                </div>
+                <div class="slide" style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem;">
+                    <h3 style="color: #d62828; font-size: 1.8rem; margin-bottom: 1rem;">400 000+ бойцов</h3>
+                    <p style="text-align: center; font-size: 1.2rem; max-width: 600px;">Сегодня РСО объединяет более 400 тысяч молодых людей из всех регионов России.</p>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button class="slider-btn prev-btn">❮</button>
+                <button class="slider-btn next-btn">❯</button>
+            </div>
+            <div class="slider-dots" id="achievementsDots"></div>
+        </div>
+    
+        <h2>Современные проекты:</h2>
+        <ul>
+            <li>Саммит АТЭС – 2012 во Владивостоке;</li>
+            <li>Универсиада – 2013 в Казани;</li>
+            <li>Олимпиада – 2014 в Сочи;</li>
+            <li>Космодромы Плесецк и Восточный;</li>
+            <li>Чемпионат мира по футболу – 2018;</li>
+            <li>Ямальский газовый проект и другие.</li>
+        </ul>
+    </section>
+
+
+    <script>
+
+        const photoSlider = document.getElementById('photoSlider');
+        const photoDotsContainer = document.getElementById('photoDots');
+        let photoCurrentSlide = 0;
+        
+
+        const achievementsSlider = document.getElementById('achievementsSlider');
+        const achievementsDotsContainer = document.getElementById('achievementsDots');
+        let achievementsCurrentSlide = 0;
+        
+
+        function initSlider(slider, dotsContainer, currentSlide) {
+            const slides = slider.querySelectorAll('.slide');
+            const prevBtns = slider.querySelectorAll('.prev-btn');
+            const nextBtns = slider.querySelectorAll('.next-btn');
+            
+         
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateSlider();
+                });
+                dotsContainer.appendChild(dot);
+            });
+            
+      
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+   
+                dotsContainer.querySelectorAll('.dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+  
+            prevBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                    updateSlider();
+                });
+            });
+            
+            nextBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    updateSlider();
+                });
+            });
+            
+
+            let slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                updateSlider();
+            }, 5000);
+            
+ 
+            slider.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+            
+            slider.addEventListener('mouseleave', () => {
+                slideInterval = setInterval(() => {
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    updateSlider();
+                }, 5000);
+            });
+            
+            return { updateSlider };
+        }
+        
+  
+        initSlider(photoSlider, photoDotsContainer, photoCurrentSlide);
+        initSlider(achievementsSlider, achievementsDotsContainer, achievementsCurrentSlide);
+    </script>
 {% endblock content %}
 

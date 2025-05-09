@@ -1,0 +1,137 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 200px auto;
+    background-color: rgba(248, 244, 238, 0.95);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Jost', sans-serif;
+}
+
+/* Заголовок */
+h1 {
+    font-family: 'Nosifer', cursive;
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Метаданные */
+.text-muted {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Контейнер для изображения */
+.post-image-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+
+.post-image {
+    max-width: 100%;
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    object-fit: contain;
+}
+
+
+.news-content {
+    margin-top: 30px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333;
+    white-space: pre-line;
+}
+
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.staff-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.link{
+    color: #800000;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-outline-primary {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    background-color: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    background-color: transparent;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #dc3545; 
+    font-size: 1.25rem;
+    transition: color 0.2s ease;
+}
+
+.icon-button:hover {
+    color: #a71d2a; 
+}

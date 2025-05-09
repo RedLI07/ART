@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.conf import settings
-from . import views
+from . import views, forms
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -17,22 +17,23 @@ urlpatterns = [
     path('participants/', views.user_list, name='participants'),
     path('login/', auth_views.LoginView.as_view(
         template_name='login.html',
-        extra_context={'title': 'Вход в систему'}
-    ), name='login'),
+    extra_context={'title': 'Вход в систему'}
+), name='login'),
     path('logout/', auth_views.LogoutView.as_view(
         template_name='logout.html',
-        extra_context={'title': 'Выход из системы'}
     ), name='logout'),
     
     path('assign-role/', views.assign_role, name='assign_role'),
     path('news/add/', views.add_news, name='add_news'),
     path('news/<int:pk>/edit/', views.edit_news, name='edit_news'),
     path('news/', views.news_list, name='news_list'),
-    path('news/<int:pk>/', views.news_detail, name='news_detail'),path('admin-panel/', views.admin_panel, name='admin_panel'),
+    path('news/<int:pk>/', views.news_detail, name='news_detail'),
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
     path('approve-user/<int:user_id>/', views.approve_user, name='approve_user'),
     path('reject-user/<int:user_id>/', views.reject_user, name='reject_user'),
     path('delete-user/', views.delete_user, name='delete_user'),
     path('add-news/', views.add_news, name='add_news'),
-    path('edit-news/<int:news_id>/', views.edit_news, name='edit_news'),
     path('delete-news/<int:news_id>/', views.delete_news, name='delete_news'),
+    path('warning', views.warning, name='warning'),
+    path('photo/delete/<int:photo_id>/', views.delete_photo, name='delete_photo'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

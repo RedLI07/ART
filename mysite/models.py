@@ -2,11 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator
 from PIL import Image
+import qrcode
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import os
 from django.utils.text import slugify
 from django.conf import settings
+import base64
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -53,6 +57,32 @@ class CustomUser(AbstractUser):
         null=True,
         verbose_name="Роль"
     )
+    vk_link = models.URLField(
+        max_length=200, 
+        blank=True, 
+        null=True, 
+        verbose_name="Ссылка на VK"
+    )
+    def generate_vk_qr_code(self):
+        if self.vk_link:
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(self.vk_link)
+            qr.make(fit=True)
+
+    
+            img = qr.make_image(fill='black', back_color='white')
+
+            
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
+            return img_str
+        return None
 
     objects = CustomUserManager()
 
@@ -62,12 +92,22 @@ class CustomUser(AbstractUser):
     def is_profile_complete(self):
         return all([
             self.join_year is not None,
-            self.about not in [None, ''],
-            self.achievements not in [None, '']
+            bool(self.about and self.about.strip()),
+            bool(self.achievements and self.achievements.strip())
         ])
+    
+
+ 
 
     def get_bricks_display(self):
-        return "Кандидат" if self.bricks_count == 0 else f"{self.bricks_count} кирпича"
+        if self.bricks_count == 1:
+            return "1 кирпич"
+        elif self.bricks_count == 0:
+            return "Кандидат"
+        elif self.bricks_count >= 2 and self.bricks_count< 5:
+            return f"{self.bricks_count} кирпича"
+        else:
+            return f"{self.bricks_count} кирпичей"
     
     def can_manage_news(self):
         return self.role in [self.COMMANDER, self.PRESS_SECRETARY] or self.is_superuser
@@ -100,9 +140,22 @@ class UserPhoto(models.Model):
                 img.save(thumbnail_path)
 
 
+def generate_unique_slug(instance):
+
+    base_slug = slugify(instance.title)
+    if not base_slug:
+        base_slug = "news"
+    slug = base_slug
+    num = 1
+    ModelClass = instance.__class__
+    while ModelClass.objects.filter(slug=slug).exists():
+        slug = f"{base_slug}-{num}"
+        num += 1
+    return slug
+
 class NewsPost(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
-    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL-адрес")  # Добавляем это поле
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL-адрес")
     content = models.TextField(verbose_name="Содержание")
     image = models.ImageField(upload_to='news_images/', verbose_name="Изображение")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name="Автор")
@@ -110,11 +163,21 @@ class NewsPost(models.Model):
     is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
+        if not self.slug or self.slug.strip() == '':
+            self.slug = generate_unique_slug(self)
         super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
         ordering = ['-created_at']
+
+
+
+class NewsPostPhoto(models.Model):
+    post = models.ForeignKey(NewsPost, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='news_photos/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-uploaded_at']

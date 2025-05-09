@@ -15,24 +15,29 @@
 {% block css %}
     <link rel="stylesheet" href="{% static "css/participants.css" %}">
 {% endblock css %}
-{% block title %}{{ user.username }}{% endblock title %}
+{% block title %}Участники{% endblock title %}
 
 {% block content %}
 
 <section class="main">
-    <h2 class="title">Участники</h2>
     <div class="container">
+        <h2 class="title">Участники</h2>
         <section class="friends">
             <h3 class="subtitle">{{ title }} ({{ users|length }})</h3>
             {% for u in users %}
                 <article class="already-friends">
                     <a class="midle" href="{% url 'user_profile' u.user.username %}">
                         {% if u.avatar %}
-                            <img src="{{ u.avatar.image.url }}" alt="аватар {{ u.user.username }}">
+                            <img src="{{ u.avatar.image.url }}">
+                        {% else %}
+                        <img src="{% static "img/none-user.png" %}">
                         {% endif %}
                     </a>
                     <div class="name">
-                        <a class="username" href="{% url 'user_profile' u.user.username %}">{{ u.user.username }}</a>
+                        <div>
+                            <a class="username" href="{% url 'user_profile' u.user.username %}">{{ u.user.first_name }}</a>
+                            <a class="username" href="{% url 'user_profile' u.user.username %}">{{ u.user.last_name }}</a>
+                        </div>
                         <div class="status bricks">{{ u.bricks }}</div>
                     </div>
                 </article>

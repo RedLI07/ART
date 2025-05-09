@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 from .decorators import admin_required, can_manage_news
+from django.http import Http404
 from .forms import *
 from .models import *
 
@@ -18,15 +19,20 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_approved = False 
+            user.is_approved = False
             user.save()
             return redirect('wait_for_approval')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
+
+
 @login_required
 def complete_profile(request):
+    if not request.user.is_approved:
+        return redirect('warning')
+
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=request.user)
         avatar_form = AvatarForm(request.POST, request.FILES)
@@ -47,7 +53,6 @@ def complete_profile(request):
                     UserPhoto.objects.create(user=request.user, image=file)
 
             return redirect('profile')
-
     else:
         profile_form = ProfileForm(instance=request.user)
         avatar_form = AvatarForm()
@@ -58,6 +63,7 @@ def complete_profile(request):
         'avatar_form': avatar_form,
         'photos_form': photos_form
     })
+
 
 @login_required
 def profile(request, username=None):
@@ -73,12 +79,13 @@ def profile(request, username=None):
     
     avatar = user_profile.photos.filter(is_avatar=True).first()
     photos = user_profile.photos.filter(is_avatar=False)
+    vk_qr = user_profile.generate_vk_qr_code()
     
     return render(request, 'profile.html', {
         'user_profile': user_profile,
         'avatar': avatar,
         'photos': photos,
-        
+        'vk_qr': vk_qr,
     })
 
 
@@ -117,13 +124,30 @@ def change_profile(request):
         photos_form = MultiplePhotosForm(request.POST, request.FILES)
 
         if profile_form.is_valid():
+      
+            new_join_year = profile_form.cleaned_data.get('join_year')
+            new_about = profile_form.cleaned_data.get('about', '').strip()
+            new_achievements = profile_form.cleaned_data.get('achievements', '').strip()
+
+            if not new_join_year or not new_about or not new_achievements:
+                messages.error(
+                    request,
+                    'Обязательные поля не могут быть пустыми или состоять только из пробелов!'
+                )
+                return render(request, 'change_profile.html', {
+                    'profile_form': profile_form,
+                    'avatar_form': avatar_form,
+                    'photos_form': photos_form,
+                    'avatar': UserPhoto.objects.filter(user=user, is_avatar=True).first(),
+                    'user_photos': UserPhoto.objects.filter(user=user, is_avatar=False),
+                })
+
+           
             profile_form.save()
 
-            # Обработка аватара
+            # Обработка аватарки
             if avatar_form.is_valid() and 'image' in request.FILES:
-                # Удалить старый аватар
                 UserPhoto.objects.filter(user=user, is_avatar=True).delete()
-                
                 avatar = avatar_form.save(commit=False)
                 avatar.user = user
                 avatar.is_avatar = True
@@ -134,6 +158,7 @@ def change_profile(request):
                 for file in request.FILES.getlist('photos'):
                     UserPhoto.objects.create(user=user, image=file)
 
+     
             return redirect('profile')
 
     else:
@@ -141,16 +166,12 @@ def change_profile(request):
         avatar_form = AvatarForm()
         photos_form = MultiplePhotosForm()
 
-    # Получение текущего аватара и фото
-    avatar = UserPhoto.objects.filter(user=user, is_avatar=True).first()
-    user_photos = UserPhoto.objects.filter(user=user, is_avatar=False)
-
     return render(request, 'change_profile.html', {
         'profile_form': profile_form,
         'avatar_form': avatar_form,
         'photos_form': photos_form,
-        'avatar': avatar,
-        'user_photos': user_photos,
+        'avatar': UserPhoto.objects.filter(user=user, is_avatar=True).first(),
+        'user_photos': UserPhoto.objects.filter(user=user, is_avatar=False),
     })
 
 def user_list(request):
@@ -307,3 +328,38 @@ def delete_news(request, news_id):
     return redirect('admin_panel')
 
 
+def warning(request):
+    return render(request, 'warning.html')
+
+def user_profile(request, username):
+    user = CustomUser.objects.get(username=username)
+    
+
+    vk_qr = user.generate_vk_qr_code()
+
+    return render(request, 'user_profile.html', {
+        'user': user,
+        'vk_qr': vk_qr
+    })
+
+
+
+@login_required
+def delete_photo(request, photo_id):
+    try:
+        # Получаем фото из UserPhoto, а не NewsPostPhoto
+        photo = UserPhoto.objects.get(id=photo_id)
+        
+        # Проверяем, что фото принадлежит текущему пользователю
+        if photo.user != request.user:
+            messages.error(request, "Вы не можете удалить это фото")
+            return redirect('profile')
+            
+        # Удаляем фото
+        photo.delete()
+        messages.success(request, "Фото успешно удалено")
+        
+    except UserPhoto.DoesNotExist:
+        messages.error(request, "Фото не найдено")
+    
+    return redirect('profile')

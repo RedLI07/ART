@@ -15,7 +15,7 @@
 {% block css %}
     <link rel="stylesheet" href="{% static "css/complet_profile.css" %}">
 {% endblock css %}
-{% block title %}Регистрация{% endblock title %}
+{% block title %}Заполнение профиля{% endblock title %}
 
 
 {% block content %}
@@ -25,14 +25,19 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <div class="card mb-4">
-                <div class="card-header">Основная информация</div>
-                <div class="card-body">
-                    {{ profile_form.as_p }}
-                </div>
-            </div>
             
-            <div class="card mb-4">
+                <div class="card">
+                    <div class="card-header">Основная информация</div>
+                    <div class="card-body main-info">
+                        <div class="form-group">
+                            {{ profile_form.as_p }}
+                        </div>
+                    </div>
+                </div>
+    
+            
+            
+            <div class="card">
                 <div class="card-header">Аватар</div>
                 <div class="card-body">
                     {{ avatar_form.as_p }}
@@ -46,8 +51,16 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <div class="col-btn">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                
+            </div>
+            
         </form>
+        <form action="{% url "logout" %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary exit">Выйти</button>
+        </form> 
     </div>
 </section>
 {% endblock %}

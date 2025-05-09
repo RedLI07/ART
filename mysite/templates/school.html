@@ -7,29 +7,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Nosifer&display=swap" rel="stylesheet">
     <style>
         body{
-            background: url({% static "img/fon-sv.png" %}) no-repeat center center/cover;
+            width: 100vw;
+            height: 100vh;
+            background: url({% static "img/fon-reg.jpg" %}) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
         }
     </style>
 {% endblock shrift %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "css/school.css" %}">
+    <link rel="stylesheet" href="{% static 'css/school.css' %}">
 {% endblock css %}
+{% block title %}Школа вожатых{% endblock title %}
 
 {% block content %}
-    <section class="main">
-        <article class="text">
-            <div>
-                <h1>Школа вожатых</h1>
-                <p>перед тем как отправиться на свою первую целину кандидаты проходят обучение в школе вожатых. 
-                    Обучение - это набор лекций от профессоналов своего дела. Так же обучающиеся выезжают на 
-                    "Инструктивный сбор", где используют весь изученый материал на практике 
+<section class="main">
+    <div class="container">
+        <div class="profile-card">
+            <div class="card-boy">
+                <h2 class="fighter-title">Программа "Школа вожатых"</h2>
+
+                <p class="intro">
+                    Хотите стать вожатым? Пройдите обучение и получите все необходимые навыки для успешного руководства студенческим отрядом!
                 </p>
+
+                <h3 class="section-title">Что вас ждёт?</h3>
+                <ul>
+                    <li>Обучение лидерству и управлению командой</li>
+                    <li>Практика по организации мероприятий и досуга</li>
+                    <li>Знания по безопасности, первой помощи и правовым вопросам</li>
+                    <li>Психология и педагогика в работе с группами</li>
+                    <li>Сертификат о завершении программы</li>
+                </ul>
+
+                <h3 class="section-title">Для кого это?</h3>
+                <p>
+                    Программа предназначена для студентов, желающих стать вожатыми в студенческих отрядах, а также для тех, кто хочет развить лидерские качества и получить опыт в организации мероприятий.
+                </p>
+
+                <h3 class="section-title">Как записаться?</h3>
+                <p>
+                    Для участия в программе достаточно заполнить заявку и пройти небольшое собеседование. Мы всегда рады новым людям, готовым развиваться и работать в команде!
+                </p>
+
+                <div class="cta-button">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScyK-7BqnQ1uWjSkuzURw47nFjahujUdLcR8SSWZp7NNfQ6HQ/viewform?clckid=4ba74b4a" class="btn btn-primary">Записаться на курс</a>
+                </div>
+
+                <h3 class="section-title">Присоединяйтесь!</h3>
+                <p>Пройдите обучение и станьте частью студенческого движения!</p>
+
+                <div class="qr-code">
+                    <p>Отсканируйте QR-код для регистрации:</p>
+                    <img src="{% static "img/qr-shv.png" %}" alt="QR код для записи">
+                    
+                </div>
+
             </div>
-        </article>
-
-        <article class="mini-foto">
-
-        </article>
-    </section>
-{% endblock content %}
+        </div>
+    </div>
+</section>
+{% endblock %}

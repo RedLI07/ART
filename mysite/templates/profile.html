@@ -14,49 +14,62 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static "css/profile.css" %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
 {% endblock css %}
-{% block title %}{{ user.username }}{% endblock title %}
+
+{% block title %}{{ user_profile.username }}{% endblock title %}
 
 {% block content %}
 <section class="main">
     <div class="container">
         <div class="profile-card">
-            <div style="display: grid; align-items: start; grid-template-columns: 1fr 1fr;">
-         
+            <div style="display: grid; align-items: start; grid-template-columns: 1fr 1fr 1fr;">
                 <div class="avatar-container">
                     {% if avatar %}
-                        <img src="{{ avatar.image.url }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Аватар">
+                        <img src="{{ avatar.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static "img/none-user.png" %}" style="width: 100%; height: 100%; object-fit: cover;">
                     {% endif %}
-                    
                 </div>
-                
-           
+
                 <div class="card-boy">
                     <h2 class="fighter-title">Карточка бойца</h2>
-                    
+
                     <div class="info-item">
                         <span class="info-label">Имя:</span> 
-                        {{ user.first_name}}
+                        {{ user_profile.first_name }}
                     </div>
-                    
+
                     <div class="info-item">
                         <span class="info-label">Фамилия:</span>
-                        {{ user.last_name}}
+                        {{ user_profile.last_name }}
                     </div>
-                    
+
                     <div class="info-item">
                         <span class="info-label">Год вступления:</span>
-                        {{ user.join_year}}
+                        {{ user_profile.join_year }}
                     </div>
 
                     <div class="info-item">
                         <span class="info-label">Кирпичи:</span>
-                        <span style="background: #0d6efd; color: white; padding: 2px 8px; border-radius: 10px;">{{ user.get_bricks_display }}</span>
+                        <span style="background: #0d6efd; color: white; padding: 2px 8px; border-radius: 10px;">{{ user_profile.get_bricks_display }}</span>
                     </div>
+
+                    {% if user_profile.role == 'commander' or user_profile.role == 'press' %}
+                    <div class="info-item">
+                        <span class="info-label">Должность:</span>
+                        {{ user_profile.get_role_display }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="vk">
+                    {% if user.vk_link %}
+                        <img class="qr" src="data:image/png;base64,{{ vk_qr }}" alt="QR-код на VK">
+                    {% endif %}
                 </div>
             </div>
 
-            {% if user == user_profile%}
+            {% if user == user_profile %}
                 <div class="work_profile">
                     <a href="{% url "change_profile" %}" class="changed-profile">Изменить профиль</a>
                     <form action="{% url "logout" %}" method="post">
@@ -65,28 +78,28 @@
                     </form>
                 </div>
             {% endif %}
-            
-            {% if user.is_staff %}
+
+            {% if user.is_staff and user == user_profile %}
                 <div class="admin">
                     <a href="{% url 'admin_panel' %}" class="btn btn-primary">
                         Администрирование
                     </a>
                 </div>
             {% endif %}
+
             <h3 class="section-title">Немного обо мне</h3>
             <div class="about-text">
-                {% if user.about %}
-                    {{ user.about}}
+                {% if user_profile.about %}
+                    {{ user_profile.about }}
                 {% else %}
                     <p style="color: #6c757d;">Информация не добавлена</p>
                 {% endif %}
             </div>
-            
-           
+
             <h3 class="section-title">Мои достижения</h3>
             <ul class="achievements-list">
-                {% if user.achievements %}
-                    {% for item in user.achievements.strip.splitlines %}
+                {% if user_profile.achievements %}
+                    {% for item in user_profile.achievements.strip.splitlines %}
                         {% if item.strip %}
                             <li>{{ item.strip }}</li>
                         {% endif %}
@@ -97,20 +110,32 @@
             </ul>
 
             <h3 class="section-title">Фотографии</h3>
-
             {% if photos %}
             <div class="photo-slider">
                 <div class="photo-track">
                     {% for photo in photos %}
-                        <div class="photo-slide">
-                            <img src="{{ photo.image.url }}" alt="Фото пользователя">
+                        <div class="photo-slide" style="position: relative;">
+                            <a href="{{ photo.image.url }}" data-lightbox="profile-gallery">
+                                <img src="{{ photo.image.url }}" alt="Фото пользователя">
+                            </a>
+                            {% if user == user_profile %}
+                                <form method="post" action="{% url 'delete_photo' photo.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger delete-btn btn-sm" 
+                                            onclick="return confirm('Удалить фото?');">
+                                        ✕
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
             </div>
-            {% endif %}
+        {% endif %}
         </div>
     </div>
 </section>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 {% endblock %}
